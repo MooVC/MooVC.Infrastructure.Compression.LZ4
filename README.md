@@ -4,6 +4,7 @@
 
 The MooVC Infrastructural Compression library for LZ4 is designed to encapsulate the K4os.Compression.LZ4 implementation through the standardized MooVC.Compression interpretation, facilitating ease of consumption within inner layers without direct coupling to infrastructural concerns.
 
-# Release v1.0.0
+# Release v2.0.0
 
-- Initial Release
+- Changed to target MooVC V6.* (**breaking change**).
+- Changed to target NET 6 in addition to NET 5 and NET Standard 2.1.
