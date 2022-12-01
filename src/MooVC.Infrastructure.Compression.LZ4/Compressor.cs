@@ -1,50 +1,41 @@
-﻿namespace MooVC.Infrastructure.Compression.LZ4
+﻿namespace MooVC.Infrastructure.Compression.LZ4;
+
+using System.IO;
+using K4os.Compression.LZ4.Streams;
+using MooVC.Compression;
+
+public sealed class Compressor
+    : SynchronousCompressor
 {
-    using System.IO;
-    using K4os.Compression.LZ4.Streams;
-    using MooVC.Compression;
-
-    public sealed class Compressor
-        : SynchronousCompressor
+    public Compressor(LZ4DecoderSettings? decoder = default, LZ4EncoderSettings? encoder = default)
     {
-        public Compressor(
-            LZ4DecoderSettings? decoder = default,
-            LZ4EncoderSettings? encoder = default)
-        {
-            Decoder = decoder ?? new LZ4DecoderSettings();
-            Encoder = encoder ?? new LZ4EncoderSettings();
-        }
+        Decoder = decoder ?? new LZ4DecoderSettings();
+        Encoder = encoder ?? new LZ4EncoderSettings();
+    }
 
-        public LZ4DecoderSettings Decoder { get; }
+    public LZ4DecoderSettings Decoder { get; }
 
-        public LZ4EncoderSettings Encoder { get; }
+    public LZ4EncoderSettings Encoder { get; }
 
-        protected override Stream PerformCompress(Stream source)
-        {
-            var result = new MemoryStream();
+    protected override Stream PerformCompress(Stream source)
+    {
+        var result = new MemoryStream();
 
-            using LZ4EncoderStream encoded = LZ4Stream.Encode(
-                result,
-                settings: Encoder,
-                leaveOpen: true);
+        using LZ4EncoderStream encoded = LZ4Stream.Encode(result, settings: Encoder, leaveOpen: true);
 
-            source.CopyTo(encoded);
+        source.CopyTo(encoded);
 
-            return result;
-        }
+        return result;
+    }
 
-        protected override Stream PerformDecompress(Stream source)
-        {
-            var result = new MemoryStream();
+    protected override Stream PerformDecompress(Stream source)
+    {
+        var result = new MemoryStream();
 
-            using LZ4DecoderStream decoded = LZ4Stream.Decode(
-                source,
-                settings: Decoder,
-                leaveOpen: true);
+        using LZ4DecoderStream decoded = LZ4Stream.Decode(source, settings: Decoder, leaveOpen: true);
 
-            decoded.CopyTo(result);
+        decoded.CopyTo(result);
 
-            return result;
-        }
+        return result;
     }
 }

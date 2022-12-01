@@ -1,32 +1,31 @@
-﻿namespace MooVC.Infrastructure.Compression.LZ4.CompressorTests
+﻿namespace MooVC.Infrastructure.Compression.LZ4.CompressorTests;
+
+using System.IO;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using MooVC.IO;
+using Xunit;
+
+public sealed class WhenStreamsAreCompressed
 {
-    using System.IO;
-    using System.Security.Cryptography;
-    using System.Threading.Tasks;
-    using MooVC.IO;
-    using Xunit;
-
-    public sealed class WhenStreamsAreCompressed
+    [Fact]
+    public async Task GivenAStreamThenTheResultMatchesAsync()
     {
-        [Fact]
-        public async Task GivenAStreamThenTheResultMatchesAsync()
-        {
-            byte[] expected = new byte[32768];
-            var random = RandomNumberGenerator.Create();
+        byte[] expected = new byte[32768];
+        var random = RandomNumberGenerator.Create();
 
-            random.GetNonZeroBytes(expected);
+        random.GetNonZeroBytes(expected);
 
-            var compressor = new Compressor();
-            using var stream = new MemoryStream(expected);
-            using Stream compressed = await compressor.CompressAsync(stream);
+        var compressor = new Compressor();
+        using var stream = new MemoryStream(expected);
+        using Stream compressed = await compressor.CompressAsync(stream);
 
-            Assert.NotEqual(expected, compressed.GetBytes());
+        Assert.NotEqual(expected, compressed.GetBytes());
 
-            compressed.Position = 0;
+        compressed.Position = 0;
 
-            using Stream decompressed = await compressor.DecompressAsync(compressed);
+        using Stream decompressed = await compressor.DecompressAsync(compressed);
 
-            Assert.Equal(expected, decompressed.GetBytes());
-        }
+        Assert.Equal(expected, decompressed.GetBytes());
     }
 }
