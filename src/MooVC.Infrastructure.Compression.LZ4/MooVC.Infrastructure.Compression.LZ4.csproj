@@ -3,7 +3,7 @@
     <Description>A library designed to encapsulate the K4os.Compression.LZ4 implementation through the standardized MooVC.Compression interpretation, facilitating ease of consumption within inner layers without direct coupling to infrastructural concerns.</Description>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.*" />
-    <PackageReference Include="MooVC" Version="7.*" />
+    <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.3.8" />
+    <PackageReference Include="MooVC" Version="8.0.0" />
   </ItemGroup>
 </Project>
